@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: guapi_verde
+      POSTGRES_USER: postgresql
+      POSTGRES_PASSWORD: 99590610
+    ports:
+      - "5440:5432"
+    volumes:
+      - dados_guapi_verde:/var/lib/postgresql/data
+
+volumes:
+  dados_guapi_verde:
