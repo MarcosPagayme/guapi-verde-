@@ -1,5 +1,4 @@
-# guapi-verde-
-projeto mvp mobile 
+
 
 
 # 🌿 Projeto Guapi Verde
