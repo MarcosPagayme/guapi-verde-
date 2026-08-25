@@ -4,8 +4,12 @@ import com.GuapiVerde.mvp.dto.CategoriaAtrativoEntrada;
 import com.GuapiVerde.mvp.dto.CategoriaAtrativoResposta;
 import com.GuapiVerde.mvp.entity.CategoriaAtrativo;
 import com.GuapiVerde.mvp.exception.DuplicateResourceException;
+import com.GuapiVerde.mvp.exception.ResourceNotFoundException;
 import com.GuapiVerde.mvp.repository.CategoriaAtrativoRepositorio;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,5 +43,64 @@ public class CategoriaAtrativoService {
         CategoriaAtrativo categoriaSalva = repositorio.save(categoria);
 
         return CategoriaAtrativoResposta.de(categoriaSalva);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CategoriaAtrativoResposta> listar() {
+        return repositorio.findAll()
+                .stream()
+                .map(CategoriaAtrativoResposta::de)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public CategoriaAtrativoResposta obterPorId(Long id) {
+        CategoriaAtrativo categoria = repositorio.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Categoria não encontrada."
+                ));
+
+        return CategoriaAtrativoResposta.de(categoria);
+    }
+
+    @Transactional
+    public CategoriaAtrativoResposta atualizar(
+            Long id,
+            CategoriaAtrativoEntrada entrada
+    ) {
+        CategoriaAtrativo categoria = repositorio.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Categoria não encontrada."
+                ));
+
+        String novoNome = entrada.nome().trim();
+
+        if (repositorio.existsByNomeIgnoreCaseAndIdNot(novoNome, id)) {
+            throw new DuplicateResourceException(
+                    "Já existe uma categoria cadastrada com esse nome."
+            );
+        }
+
+        categoria.setNome(novoNome);
+        categoria.setDescricao(
+                entrada.descricao() == null
+                        ? null
+                        : entrada.descricao().trim()
+        );
+
+        CategoriaAtrativo categoriaAtualizada = repositorio.save(categoria);
+
+        return CategoriaAtrativoResposta.de(categoriaAtualizada);
+    }
+
+    @Transactional
+    public void desativar(Long id) {
+        CategoriaAtrativo categoria = repositorio.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Categoria não encontrada."
+                ));
+
+        categoria.setAtivo(false);
+        repositorio.save(categoria);
     }
 }
