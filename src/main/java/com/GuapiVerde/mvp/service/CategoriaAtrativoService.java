@@ -3,6 +3,7 @@ package com.GuapiVerde.mvp.service;
 import com.GuapiVerde.mvp.dto.CategoriaAtrativoEntrada;
 import com.GuapiVerde.mvp.dto.CategoriaAtrativoResposta;
 import com.GuapiVerde.mvp.entity.CategoriaAtrativo;
+import com.GuapiVerde.mvp.exception.DuplicateResourceException;
 import com.GuapiVerde.mvp.repository.CategoriaAtrativoRepositorio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class CategoriaAtrativoService {
         String nome = entrada.nome().trim();
 
         if (repositorio.existsByNomeIgnoreCase(nome)) {
-            throw new IllegalArgumentException(
+            throw new DuplicateResourceException(
                     "Já existe uma categoria cadastrada com esse nome."
             );
         }
