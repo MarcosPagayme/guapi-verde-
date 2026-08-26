@@ -1,7 +1,7 @@
 package com.GuapiVerde.mvp.controller;
 
 import com.GuapiVerde.mvp.dto.CategoriaAtrativoEntrada;
-import com.GuapiVerde.mvp.dto.CategoriaAtrativoResposta;
+import com.GuapiVerde.mvp.dto.CategoriaAtrativoResponse;
 import com.GuapiVerde.mvp.service.CategoriaAtrativoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,26 +28,26 @@ public class CategoriaAtrativoController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<CategoriaAtrativoResposta> listar() {
+    public List<CategoriaAtrativoResponse> listar() {
         return service.listar();
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CategoriaAtrativoResposta obterPorId(@PathVariable Long id) {
+    public CategoriaAtrativoResponse obterPorId(@PathVariable Long id) {
         return service.obterPorId(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoriaAtrativoResposta cadastrar(
+    public CategoriaAtrativoResponse cadastrar(
             @Valid @RequestBody CategoriaAtrativoEntrada entrada) {
         return service.cadastrar(entrada);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CategoriaAtrativoResposta atualizar(
+    public CategoriaAtrativoResponse atualizar(
             @PathVariable Long id,
             @Valid @RequestBody CategoriaAtrativoEntrada entrada) {
         return service.atualizar(id, entrada);

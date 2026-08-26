@@ -1,7 +1,7 @@
 package com.GuapiVerde.mvp.service;
 
 import com.GuapiVerde.mvp.dto.CategoriaAtrativoEntrada;
-import com.GuapiVerde.mvp.dto.CategoriaAtrativoResposta;
+import com.GuapiVerde.mvp.dto.CategoriaAtrativoResponse;
 import com.GuapiVerde.mvp.entity.CategoriaAtrativo;
 import com.GuapiVerde.mvp.exception.DuplicateResourceException;
 import com.GuapiVerde.mvp.exception.ResourceNotFoundException;
@@ -20,7 +20,7 @@ public class CategoriaAtrativoService {
     private final CategoriaAtrativoRepositorio repositorio;
 
     @Transactional
-    public CategoriaAtrativoResposta cadastrar(
+    public CategoriaAtrativoResponse cadastrar(
             CategoriaAtrativoEntrada entrada
     ) {
         String nome = entrada.nome().trim();
@@ -42,29 +42,29 @@ public class CategoriaAtrativoService {
 
         CategoriaAtrativo categoriaSalva = repositorio.save(categoria);
 
-        return CategoriaAtrativoResposta.de(categoriaSalva);
+        return CategoriaAtrativoResponse.de(categoriaSalva);
     }
 
     @Transactional(readOnly = true)
-    public List<CategoriaAtrativoResposta> listar() {
+    public List<CategoriaAtrativoResponse> listar() {
         return repositorio.findAll()
                 .stream()
-                .map(CategoriaAtrativoResposta::de)
+                .map(CategoriaAtrativoResponse::de)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public CategoriaAtrativoResposta obterPorId(Long id) {
+    public CategoriaAtrativoResponse obterPorId(Long id) {
         CategoriaAtrativo categoria = repositorio.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Categoria não encontrada."
                 ));
 
-        return CategoriaAtrativoResposta.de(categoria);
+        return CategoriaAtrativoResponse.de(categoria);
     }
 
     @Transactional
-    public CategoriaAtrativoResposta atualizar(
+    public CategoriaAtrativoResponse atualizar(
             Long id,
             CategoriaAtrativoEntrada entrada
     ) {
@@ -90,7 +90,7 @@ public class CategoriaAtrativoService {
 
         CategoriaAtrativo categoriaAtualizada = repositorio.save(categoria);
 
-        return CategoriaAtrativoResposta.de(categoriaAtualizada);
+        return CategoriaAtrativoResponse.de(categoriaAtualizada);
     }
 
     @Transactional
