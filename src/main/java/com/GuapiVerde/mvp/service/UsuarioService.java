@@ -49,4 +49,11 @@ public class UsuarioService {
         return CadastroUsuarioResponse.de(usuarioSalvo);
     }
 
+        @Transactional(readOnly = true)
+        public Usuario buscarPorEmail(String email) {
+            return usuarioRepository.findByEmailIgnoreCase(email)
+                    .orElseThrow(() -> new RuntimeException(
+                            "Usuário não encontrado com o email: " + email
+                    ));
+        }
 }

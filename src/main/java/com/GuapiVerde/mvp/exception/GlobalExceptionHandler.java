@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -63,4 +64,23 @@ public class GlobalExceptionHandler {
                 null);
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(AuthenticationException.class)
+public ResponseEntity<ErrorResponse> tratarErroDeAutenticacao(
+        AuthenticationException excecao,
+        HttpServletRequest requisicao
+) {
+    HttpStatus status = HttpStatus.UNAUTHORIZED;
+
+    ErrorResponse erro = new ErrorResponse(
+            LocalDateTime.now(),
+            status.value(),
+            "Não autorizado",
+            "E-mail ou senha inválidos.",
+            requisicao.getRequestURI(),
+            null
+    );
+
+    return ResponseEntity.status(status).body(erro);
+}
 }
