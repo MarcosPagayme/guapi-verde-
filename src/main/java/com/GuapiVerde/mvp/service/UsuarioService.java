@@ -56,4 +56,6 @@ public class UsuarioService {
                             "Usuário não encontrado com o email: " + email
                     ));
         }
+
+        
 }

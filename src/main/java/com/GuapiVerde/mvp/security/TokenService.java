@@ -29,7 +29,7 @@ public class TokenService {
         Instant expiracao = agora.plus(expiracaoMinutos, ChronoUnit.MINUTES);
 
         JwtClaimsSet declarations = JwtClaimsSet.builder()
-                .issuer("Guapi Verde")
+                .issuer("guapi-verde")
                 .issuedAt(agora)
                 .expiresAt(expiracao)
                 .subject(usuario.getEmail())
