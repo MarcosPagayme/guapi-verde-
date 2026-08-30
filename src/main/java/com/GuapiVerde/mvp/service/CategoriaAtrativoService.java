@@ -5,7 +5,7 @@ import com.GuapiVerde.mvp.dto.CategoriaAtrativoResponse;
 import com.GuapiVerde.mvp.entity.CategoriaAtrativo;
 import com.GuapiVerde.mvp.exception.DuplicateResourceException;
 import com.GuapiVerde.mvp.exception.ResourceNotFoundException;
-import com.GuapiVerde.mvp.repository.CategoriaAtrativoRepositorio;
+import com.GuapiVerde.mvp.repository.CategoriaAtrativoRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CategoriaAtrativoService {
 
-    private final CategoriaAtrativoRepositorio repositorio;
+    private final CategoriaAtrativoRepository repositorio;
 
     @Transactional
     public CategoriaAtrativoResponse cadastrar(
