@@ -45,7 +45,18 @@ public class ConfigSecurity {
                         .permitAll()
 
                         .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/atrativos",
+                                "/api/atrativos/**")
+                        .permitAll()
+
+                        .requestMatchers(
                                 "/api/categorias-atrativos/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(
+                                "/api/atrativos",
+                                "/api/atrativos/**")
                         .hasRole("ADMIN")
                         .anyRequest().authenticated())
 
