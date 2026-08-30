@@ -51,12 +51,23 @@ public class ConfigSecurity {
                         .permitAll()
 
                         .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/horarios-funcionamento",
+                                "/api/horarios-funcionamento/**")
+                        .permitAll()
+
+                        .requestMatchers(
                                 "/api/categorias-atrativos/**")
                         .hasRole("ADMIN")
 
                         .requestMatchers(
                                 "/api/atrativos",
                                 "/api/atrativos/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(
+                                "/api/horarios-funcionamento",
+                                "/api/horarios-funcionamento/**")
                         .hasRole("ADMIN")
                         .anyRequest().authenticated())
 
