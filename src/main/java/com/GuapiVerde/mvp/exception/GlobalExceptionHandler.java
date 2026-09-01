@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -35,6 +36,22 @@ public class GlobalExceptionHandler {
                 erros);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(
+            HttpMessageNotReadableException ex,
+            HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ErrorResponse erro = new ErrorResponse(
+                LocalDateTime.now(),
+                status.value(),
+                "Requisição inválida",
+                "O conteúdo da requisição está inválido. Verifique os valores informados.",
+                request.getRequestURI(),
+                null);
+
+        return ResponseEntity.status(status).body(erro);
     }
 
     @ExceptionHandler(DuplicateResourceException.class)

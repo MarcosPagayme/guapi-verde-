@@ -73,6 +73,11 @@ public class ConfigSecurity {
                         .authenticated()
 
                         .requestMatchers(
+                                "/api/consentimentos",
+                                "/api/consentimentos/**")
+                        .authenticated()
+
+                        .requestMatchers(
                                 "/api/categorias-atrativos/**")
                         .hasRole("ADMIN")
 
