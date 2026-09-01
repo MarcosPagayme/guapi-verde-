@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -63,6 +64,22 @@ public class GlobalExceptionHandler {
                 request.getRequestURI(),
                 null);
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(
+            DataIntegrityViolationException ex,
+            HttpServletRequest request) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        ErrorResponse erro = new ErrorResponse(
+                LocalDateTime.now(),
+                status.value(),
+                "Conflito de dados",
+                "Este relacionamento já está cadastrado.",
+                request.getRequestURI(),
+                null);
+
+        return ResponseEntity.status(status).body(erro);
     }
 
     @ExceptionHandler(RegraDeNegocioException.class)
