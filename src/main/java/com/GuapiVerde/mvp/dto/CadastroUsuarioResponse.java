@@ -1,14 +1,17 @@
 package com.GuapiVerde.mvp.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import com.GuapiVerde.mvp.entity.Usuario;
 import com.GuapiVerde.mvp.enums.PerfilUsuario;
 
+@Schema(description = "Schema de cadastro usuario response")
 public record CadastroUsuarioResponse(
-    Long Id,
+    @Schema(description = "Identificador relacionado a Id", example = "1") Long Id,
     String nome,
     String email,
-    PerfilUsuario perfil,
-    Boolean ativo,
+    @Schema(description = "Perfil de acesso do usuário", example = "VISITANTE") PerfilUsuario perfil,
+    @Schema(description = "Indicador verdadeiro ou falso", example = "true") Boolean ativo,
     String dataCadastro
 ){
     public static CadastroUsuarioResponse de(Usuario usuario) {

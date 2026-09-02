@@ -1,16 +1,19 @@
 package com.GuapiVerde.mvp.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import com.GuapiVerde.mvp.entity.Parceiro;
 
+@Schema(description = "Schema de parceiro response")
 public record ParceiroResponse(
-        Long id,
+        @Schema(description = "Identificador relacionado a id", example = "1") Long id,
         String nome,
         String descricao,
-        String logoUrl,
-        String site,
+        @Schema(description = "URL do recurso", format = "uri", example = "https://exemplo.com/imagem.jpg") String logoUrl,
+        @Schema(description = "URL do recurso", format = "uri", example = "https://exemplo.com/imagem.jpg") String site,
         String email,
         String telefone,
-        Boolean ativo
+        @Schema(description = "Indicador verdadeiro ou falso", example = "true") Boolean ativo
 ) {
 
     public static ParceiroResponse de(Parceiro parceiro) {

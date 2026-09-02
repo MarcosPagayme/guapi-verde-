@@ -1,9 +1,12 @@
 package com.GuapiVerde.mvp.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+@Schema(description = "Schema de cadastro usuario entrada")
 public record CadastroUsuarioEntrada(
 
         @NotBlank(message = "O nome é obrigatório")
@@ -15,6 +18,6 @@ public record CadastroUsuarioEntrada(
 
         @NotBlank(message = "A senha é obrigatória")
         @Size(min = 8, max = 72, message = "A senha deve ter entre 8 e 72 caracteres")
-        String senha
+        @Schema(description = "Senha informada pelo usuário", accessMode = Schema.AccessMode.WRITE_ONLY, example = "SenhaSegura123") String senha
 ) {
 }

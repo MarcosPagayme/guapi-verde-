@@ -1,5 +1,7 @@
 package com.GuapiVerde.mvp.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.time.LocalDateTime;
 
 import com.GuapiVerde.mvp.entity.Atrativo;
@@ -7,19 +9,20 @@ import com.GuapiVerde.mvp.entity.Evento;
 import com.GuapiVerde.mvp.entity.Temporada;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+@Schema(description = "Schema de evento response")
 public record EventoResponse(
-        Long id,
+        @Schema(description = "Identificador relacionado a id", example = "1") Long id,
         String nome,
         String resumo,
         String descricao,
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime dataHoraInicio,
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime dataHoraFim,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @Schema(description = "Data e hora no padrão ISO 8601", type = "string", format = "date-time", example = "2026-09-15T09:00:00") LocalDateTime dataHoraInicio,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @Schema(description = "Data e hora no padrão ISO 8601", type = "string", format = "date-time", example = "2026-09-15T09:00:00") LocalDateTime dataHoraFim,
         String local,
-        String imagemUrl,
-        Boolean ativo,
-        Long atrativoId,
+        @Schema(description = "URL do recurso", format = "uri", example = "https://exemplo.com/imagem.jpg") String imagemUrl,
+        @Schema(description = "Indicador verdadeiro ou falso", example = "true") Boolean ativo,
+        @Schema(description = "Identificador relacionado a atrativoId", example = "1") Long atrativoId,
         String atrativoNome,
-        Long temporadaId,
+        @Schema(description = "Identificador relacionado a temporadaId", example = "1") Long temporadaId,
         String temporadaNome
 ) {
 

@@ -1,14 +1,17 @@
 package com.GuapiVerde.mvp.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import com.GuapiVerde.mvp.enums.PerfilUsuario;
 
+@Schema(description = "Schema de login response")
 public record LoginResponse (
-    String token,
+    @Schema(description = "Token JWT retornado após a autenticação") String token,
     String tipo,
-    Long usuarioId,
+    @Schema(description = "Identificador relacionado a usuarioId", example = "1") Long usuarioId,
     String nome,
     String email,
-    PerfilUsuario perfil
+    @Schema(description = "Perfil de acesso do usuário", example = "VISITANTE") PerfilUsuario perfil
 
 ){
 }
