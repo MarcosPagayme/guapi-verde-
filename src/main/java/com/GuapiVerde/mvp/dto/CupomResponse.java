@@ -1,5 +1,7 @@
 package com.GuapiVerde.mvp.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.time.LocalDate;
 
 import com.GuapiVerde.mvp.entity.Campanha;
@@ -7,18 +9,19 @@ import com.GuapiVerde.mvp.entity.Cupom;
 import com.GuapiVerde.mvp.entity.Parceiro;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+@Schema(description = "Schema de cupom response")
 public record CupomResponse(
-        Long id,
-        Long campanhaId,
+        @Schema(description = "Identificador relacionado a id", example = "1") Long id,
+        @Schema(description = "Identificador relacionado a campanhaId", example = "1") Long campanhaId,
         String campanhaTitulo,
-        Long parceiroId,
+        @Schema(description = "Identificador relacionado a parceiroId", example = "1") Long parceiroId,
         String parceiroNome,
-        String codigo,
+        @Schema(description = "Código do cupom", example = "GUAPIVERDE10") String codigo,
         String descricao,
         String regrasUso,
-        @JsonFormat(pattern = "yyyy-MM-dd") LocalDate dataValidade,
+        @JsonFormat(pattern = "yyyy-MM-dd") @Schema(description = "Data no formato AAAA-MM-DD", type = "string", format = "date", example = "2026-09-15") LocalDate dataValidade,
         Integer quantidadeDisponivel,
-        Boolean ativo
+        @Schema(description = "Indicador verdadeiro ou falso", example = "true") Boolean ativo
 ) {
 
     public static CupomResponse de(Cupom cupom) {

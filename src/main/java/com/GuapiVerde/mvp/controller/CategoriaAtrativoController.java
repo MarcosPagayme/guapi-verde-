@@ -1,5 +1,11 @@
 package com.GuapiVerde.mvp.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import com.GuapiVerde.mvp.dto.CategoriaAtrativoEntrada;
 import com.GuapiVerde.mvp.dto.CategoriaAtrativoResponse;
 import com.GuapiVerde.mvp.service.CategoriaAtrativoService;
@@ -19,24 +25,44 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Categorias de atrativos", description = "Consulta e administração das categorias de atrativos.")
 @RestController
 @RequestMapping("/api/categorias-atrativos")
 @RequiredArgsConstructor
 public class CategoriaAtrativoController {
 
     private final CategoriaAtrativoService service;
+    @Operation(summary = "Listar registros", description = "Endpoint público.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Operação concluída")
+    })
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<CategoriaAtrativoResponse> listar() {
         return service.listar();
     }
+    @Operation(summary = "Consultar registro por ID", description = "Endpoint público.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Operação concluída"),
+        @ApiResponse(responseCode = "404", ref = "#/components/responses/Erro404")
+    })
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public CategoriaAtrativoResponse obterPorId(@PathVariable Long id) {
         return service.obterPorId(id);
     }
+    @Operation(summary = "Cadastrar registro", description = "Requer autenticação JWT com perfil ADMIN.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Recurso criado"),
+        @ApiResponse(responseCode = "400", ref = "#/components/responses/Erro400"),
+        @ApiResponse(responseCode = "404", ref = "#/components/responses/Erro404"),
+        @ApiResponse(responseCode = "409", ref = "#/components/responses/Erro409"),
+        @ApiResponse(responseCode = "401", ref = "#/components/responses/Erro401"),
+        @ApiResponse(responseCode = "403", ref = "#/components/responses/Erro403")
+    })
+    @SecurityRequirement(name = "bearerAuth")
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -44,6 +70,16 @@ public class CategoriaAtrativoController {
             @Valid @RequestBody CategoriaAtrativoEntrada entrada) {
         return service.cadastrar(entrada);
     }
+    @Operation(summary = "Atualizar registro", description = "Requer autenticação JWT com perfil ADMIN.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Operação concluída"),
+        @ApiResponse(responseCode = "400", ref = "#/components/responses/Erro400"),
+        @ApiResponse(responseCode = "404", ref = "#/components/responses/Erro404"),
+        @ApiResponse(responseCode = "409", ref = "#/components/responses/Erro409"),
+        @ApiResponse(responseCode = "401", ref = "#/components/responses/Erro401"),
+        @ApiResponse(responseCode = "403", ref = "#/components/responses/Erro403")
+    })
+    @SecurityRequirement(name = "bearerAuth")
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -52,6 +88,14 @@ public class CategoriaAtrativoController {
             @Valid @RequestBody CategoriaAtrativoEntrada entrada) {
         return service.atualizar(id, entrada);
     }
+    @Operation(summary = "Desativar registro", description = "Requer autenticação JWT com perfil ADMIN.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "Operação concluída sem conteúdo"),
+        @ApiResponse(responseCode = "404", ref = "#/components/responses/Erro404"),
+        @ApiResponse(responseCode = "401", ref = "#/components/responses/Erro401"),
+        @ApiResponse(responseCode = "403", ref = "#/components/responses/Erro403")
+    })
+    @SecurityRequirement(name = "bearerAuth")
 
     @DeleteMapping({ "/{id}" })
     @ResponseStatus(HttpStatus.NO_CONTENT)

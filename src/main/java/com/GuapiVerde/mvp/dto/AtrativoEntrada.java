@@ -1,5 +1,7 @@
 package com.GuapiVerde.mvp.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.math.BigDecimal;
 
 import com.GuapiVerde.mvp.enums.SituacaoAtrativo;
@@ -12,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
+@Schema(description = "Schema de atrativo entrada")
 public record AtrativoEntrada(
         @NotBlank(message = "O nome é obrigatório.")
         @Size(max = 150, message = "O nome deve possuir no máximo 150 caracteres.")
@@ -39,10 +42,10 @@ public record AtrativoEntrada(
         String telefone,
 
         @Size(max = 255, message = "O site deve possuir no máximo 255 caracteres.")
-        String site,
+        @Schema(description = "URL do recurso", format = "uri", example = "https://exemplo.com/imagem.jpg") String site,
 
         @NotNull(message = "Informe se o atrativo é gratuito.")
-        Boolean gratuito,
+        @Schema(description = "Indicador verdadeiro ou falso", example = "true") Boolean gratuito,
 
         @DecimalMin(value = "0.00", message = "O valor de entrada não pode ser negativo.")
         @Digits(
@@ -53,13 +56,13 @@ public record AtrativoEntrada(
         BigDecimal valorEntrada,
 
         @NotNull(message = "Informe se o atrativo é acessível.")
-        Boolean acessivel,
+        @Schema(description = "Indicador verdadeiro ou falso", example = "true") Boolean acessivel,
 
         @NotNull(message = "A situação é obrigatória.")
-        SituacaoAtrativo situacao,
+        @Schema(description = "Situação do atrativo") SituacaoAtrativo situacao,
 
         @NotNull(message = "A categoria é obrigatória.")
         @Positive(message = "O ID da categoria deve ser positivo.")
-        Long categoriaAtrativoId
+        @Schema(description = "Identificador relacionado a categoriaAtrativoId", example = "1") Long categoriaAtrativoId
 ) {
 }

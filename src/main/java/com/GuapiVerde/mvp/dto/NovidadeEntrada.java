@@ -1,8 +1,11 @@
 package com.GuapiVerde.mvp.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+@Schema(description = "Schema de novidade entrada")
 public record NovidadeEntrada(
         @NotBlank(message = "O título é obrigatório.")
         @Size(max = 180, message = "O título deve possuir no máximo 180 caracteres.")
@@ -16,6 +19,6 @@ public record NovidadeEntrada(
         String conteudo,
 
         @Size(max = 500, message = "A URL da imagem deve possuir no máximo 500 caracteres.")
-        String imagemUrl
+        @Schema(description = "URL do recurso", format = "uri", example = "https://exemplo.com/imagem.jpg") String imagemUrl
 ) {
 }
