@@ -75,6 +75,18 @@ public class ConfigSecurity {
                         .permitAll()
 
                         .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/eventos/administracao",
+                                "/api/eventos/administracao/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/eventos",
+                                "/api/eventos/**")
+                        .permitAll()
+
+                        .requestMatchers(
                                 "/api/favoritos",
                                 "/api/favoritos/**")
                         .authenticated()
@@ -111,6 +123,11 @@ public class ConfigSecurity {
                         .requestMatchers(
                                 "/api/temporadas",
                                 "/api/temporadas/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(
+                                "/api/eventos",
+                                "/api/eventos/**")
                         .hasRole("ADMIN")
                         .anyRequest().authenticated())
 
