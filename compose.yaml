@@ -2,13 +2,41 @@ services:
   postgres:
     image: postgres:17
     environment:
-      POSTGRES_DB: guapi_verde
-      POSTGRES_USER: postgresql
-      POSTGRES_PASSWORD: 99590610
+      POSTGRES_DB: ${POSTGRES_DB:-guapi_verde}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5440:5432"
+      - "${POSTGRES_PORTA_EXTERNA:-5440}:5432"
     volumes:
       - dados_guapi_verde:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/guapi_verde
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_CHAVE: ${JWT_CHAVE}
+      JWT_EXPIRACAO_MINUTOS: ${JWT_EXPIRACAO_MINUTOS}
+      ADMIN_NOME: ${ADMIN_NOME}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_SENHA: ${ADMIN_SENHA}
+      CORS_ORIGENS: ${CORS_ORIGENS}
+    restart: unless-stopped
 
 volumes:
   dados_guapi_verde:
