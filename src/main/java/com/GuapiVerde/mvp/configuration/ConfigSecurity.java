@@ -123,6 +123,36 @@ public class ConfigSecurity {
                         .permitAll()
 
                         .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/cupons/administracao",
+                                "/api/cupons/administracao/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/cupons",
+                                "/api/cupons/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/api/cupons",
+                                "/api/cupons/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.DELETE,
+                                "/api/cupons",
+                                "/api/cupons/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/cupons",
+                                "/api/cupons/**")
+                        .authenticated()
+
+                        .requestMatchers(
                                 "/api/favoritos",
                                 "/api/favoritos/**")
                         .authenticated()

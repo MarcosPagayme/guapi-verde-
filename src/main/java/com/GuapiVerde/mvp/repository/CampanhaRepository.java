@@ -41,6 +41,15 @@ public interface CampanhaRepository extends JpaRepository<Campanha, Long> {
     @Query("""
             SELECT campanha
             FROM Campanha campanha
+            JOIN FETCH campanha.parceiro
+            WHERE campanha.id = :id
+              AND campanha.ativo = true
+            """)
+    Optional<Campanha> buscarAtivaPorId(@Param("id") Long id);
+
+    @Query("""
+            SELECT campanha
+            FROM Campanha campanha
             JOIN FETCH campanha.parceiro parceiro
             WHERE parceiro.id = :parceiroId
               AND campanha.ativo = true
