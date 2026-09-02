@@ -1,0 +1,14 @@
+target/
+.git/
+.github/
+.idea/
+.vscode/
+*.log
+logs/
+.env
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.tmp
+*.temp
+*~
