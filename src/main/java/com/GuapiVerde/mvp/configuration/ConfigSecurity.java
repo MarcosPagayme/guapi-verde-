@@ -1,6 +1,8 @@
 package com.GuapiVerde.mvp.configuration;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -24,18 +26,33 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.GuapiVerde.mvp.security.ForbiddenAccessDeniedHandler;
+import com.GuapiVerde.mvp.security.UnauthorizedAuthenticationEntryPoint;
 
 @Configuration
 public class ConfigSecurity {
     @Bean
     public SecurityFilterChain filterSecurity(
             HttpSecurity http,
-            JwtAuthenticationConverter conversorDeAuth)
+            JwtAuthenticationConverter conversorDeAuth,
+            CorsConfigurationSource corsConfigurationSource,
+            UnauthorizedAuthenticationEntryPoint unauthorizedAuthenticationEntryPoint,
+            ForbiddenAccessDeniedHandler forbiddenAccessDeniedHandler)
             throws Exception {
         http
                 .csrf(crsf -> crsf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .sessionManagement(sessao -> sessao.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorize -> authorize.requestMatchers(
+                .exceptionHandling(excecoes -> excecoes
+                        .authenticationEntryPoint(unauthorizedAuthenticationEntryPoint)
+                        .accessDeniedHandler(forbiddenAccessDeniedHandler))
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(
                         "/api/auth/cadastro",
                         "/api/auth/login").permitAll()
 
@@ -212,8 +229,37 @@ public class ConfigSecurity {
                         .hasRole("ADMIN")
                         .anyRequest().authenticated())
 
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(conversorDeAuth)));
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .authenticationEntryPoint(unauthorizedAuthenticationEntryPoint)
+                        .accessDeniedHandler(forbiddenAccessDeniedHandler)
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(conversorDeAuth)));
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource(
+            @Value("${aplicacao.cors.origens-permitidas}") String origensPermitidas) {
+        List<String> origens = Arrays.stream(origensPermitidas.split(","))
+                .map(String::trim)
+                .filter(origem -> !origem.isEmpty())
+                .distinct()
+                .toList();
+
+        if (origens.isEmpty() || origens.contains("*")) {
+            throw new IllegalArgumentException(
+                    "aplicacao.cors.origens-permitidas deve conter origens explicitas e nao pode usar '*'.");
+        }
+
+        CorsConfiguration configuracao = new CorsConfiguration();
+        configuracao.setAllowedOrigins(origens);
+        configuracao.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuracao.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
+        configuracao.setAllowCredentials(false);
+        configuracao.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource fonte = new UrlBasedCorsConfigurationSource();
+        fonte.registerCorsConfiguration("/**", configuracao);
+        return fonte;
     }
 
     @Bean
