@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="titulo descricao">
+  <title id="titulo">Ícone Guapi Verde</title>
+  <desc id="descricao">Uma folha branca sobre fundo verde-floresta</desc>
+  <rect width="512" height="512" rx="112" fill="#174D36"/>
+  <path d="M392 108C245 112 138 183 126 294c-7 67 39 112 96 108 104-8 178-122 170-294Z" fill="#F7F3E8"/>
+  <path d="M117 410c50-105 123-179 225-248" fill="none" stroke="#3D8B5A" stroke-linecap="round" stroke-width="28"/>
+  <path d="M203 306c38-4 70 3 98 22M249 244c7-29 22-56 44-80" fill="none" stroke="#3D8B5A" stroke-linecap="round" stroke-width="18"/>
+</svg>
