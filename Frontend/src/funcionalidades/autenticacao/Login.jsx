@@ -1,4 +1,4 @@
-﻿import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, Leaf, LoaderCircle } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
@@ -12,6 +12,12 @@ function Login() {
   const [enviando, setEnviando] = useState(false)
   const [erro, setErro] = useState('')
   const envioEmCurso = useRef(false)
+  const montado = useRef(false)
+
+  useEffect(() => {
+    montado.current = true
+    return () => { montado.current = false }
+  }, [])
 
   async function enviar(evento) {
     evento.preventDefault()
@@ -28,12 +34,13 @@ function Login() {
     setErro('')
     try {
       const usuario = await login({ email, senha })
+      if (!montado.current) return
       navigate(usuario.perfil === 'ADMIN' ? '/admin' : '/perfil', { replace: true })
     } catch (falha) {
-      setErro(mensagemErroAuth(falha))
+      if (montado.current) setErro(mensagemErroAuth(falha))
     } finally {
       envioEmCurso.current = false
-      setEnviando(false)
+      if (montado.current) setEnviando(false)
     }
   }
 

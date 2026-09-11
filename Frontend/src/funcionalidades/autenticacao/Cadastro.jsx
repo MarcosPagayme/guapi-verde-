@@ -1,4 +1,4 @@
-﻿import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, Leaf, LoaderCircle } from 'lucide-react'
 import { cadastrarVisitante, mensagemErroAuth } from '../../servicos/authService'
@@ -9,6 +9,12 @@ function Cadastro() {
   const [enviando, setEnviando] = useState(false)
   const [erro, setErro] = useState('')
   const envioEmCurso = useRef(false)
+  const montado = useRef(false)
+
+  useEffect(() => {
+    montado.current = true
+    return () => { montado.current = false }
+  }, [])
 
   async function enviar(evento) {
     evento.preventDefault()
@@ -27,12 +33,13 @@ function Cadastro() {
     setErro('')
     try {
       await cadastrarVisitante({ nome, email, senha })
+      if (!montado.current) return
       navigate('/login', { replace: true, state: { cadastroRealizado: true } })
     } catch (falha) {
-      setErro(mensagemErroAuth(falha, 'cadastro'))
+      if (montado.current) setErro(mensagemErroAuth(falha, 'cadastro'))
     } finally {
       envioEmCurso.current = false
-      setEnviando(false)
+      if (montado.current) setEnviando(false)
     }
   }
 

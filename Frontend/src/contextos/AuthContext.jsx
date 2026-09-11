@@ -37,8 +37,14 @@ export function AuthProvider({ children }) {
         if (!controller.signal.aborted) setCarregandoInicial(false)
       }
     }
-    restaurar()
-    return () => { controller.abort(); pararObservacao() }
+    // O primeiro efeito de StrictMode é limpo antes de iniciar a requisição.
+    const inicio = setTimeout(restaurar, 0)
+    return () => {
+      clearTimeout(inicio)
+      controller.abort()
+      versao.current += 1
+      pararObservacao()
+    }
   }, [])
 
   async function login(credenciais) {
