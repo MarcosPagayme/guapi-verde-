@@ -236,7 +236,7 @@ public class DataInitializr implements ApplicationRunner {
             dado.setSite(site);
             dado.setTelefone(telefone);
             dado.setDescricao(descricao + " Cadastro de DEMONSTRAÇÃO baseado em informação pública; parceria com o Guapi Verde não confirmada.");
-            dado.setAtivo(false);
+            dado.setAtivo(true);
             return dado;
         }, adicionados);
     }
@@ -251,7 +251,7 @@ public class DataInitializr implements ApplicationRunner {
                     dado.setDescricao("DEMONSTRAÇÃO técnica sem valor comercial. Não é oferta do estabelecimento relacionado.");
                     dado.setDataInicio(LocalDate.of(2026, 1, 1));
                     dado.setDataFim(LocalDate.of(2026, 12, 31));
-                    dado.setAtivo(false);
+                    dado.setAtivo(true);
                     return dado;
                 }, adicionados);
         obterOuCriar(Cupom.class, "lower(e.codigo) = lower(:codigo)", Map.of("codigo", codigo), () -> {
@@ -262,7 +262,7 @@ public class DataInitializr implements ApplicationRunner {
             dado.setRegrasUso("Exclusivo para testes locais do Guapi Verde. Não pode ser resgatado.");
             dado.setDataValidade(campanha.getDataFim());
             dado.setQuantidadeDisponivel(0);
-            dado.setAtivo(false);
+            dado.setAtivo(true);
             return dado;
         }, adicionados);
     }
