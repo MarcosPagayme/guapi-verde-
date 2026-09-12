@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom'
 import { obterAtrativoPorId } from '../../servicos/atrativoService'
 import { listarImagensDoAtrativo } from '../../servicos/imagemAtrativoService'
 import { listarHorariosDoAtrativo } from '../../servicos/horarioFuncionamentoService'
+import BotaoFavorito from './BotaoFavorito'
 
 const painel = 'rounded-3xl border border-floresta/10 bg-white p-5 shadow-sm sm:p-7'
 const botao = 'inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-floresta px-5 py-2.5 font-bold text-white transition hover:bg-folha'
@@ -143,6 +144,7 @@ function ConteudoDetalhe({ id }) {
         {dados.categoria?.nome && <p className="font-bold text-floresta">{dados.categoria.nome}</p>}
         {dados.nome && <h1 className="mt-2 text-3xl font-bold text-floresta sm:text-4xl">{dados.nome}</h1>}
         {dados.resumo && <p className="mt-3 max-w-3xl whitespace-pre-line text-lg text-slate-600">{dados.resumo}</p>}
+        <BotaoFavorito atrativoId={id} />
       </header>
       <section aria-label="Imagens do atrativo" className="space-y-3">
         <ImagemDetalhe key={ordenadas[0]?.url ?? 'sem-imagem'} imagem={ordenadas[0]} nome={dados.nome} destaque />
