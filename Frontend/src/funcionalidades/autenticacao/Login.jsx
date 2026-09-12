@@ -52,6 +52,7 @@ function Login() {
         <h1 id="titulo-login" className="mt-2 text-3xl font-bold text-floresta">Entre na sua conta</h1>
         <p className="mt-3 text-sm text-floresta/75">Seu próximo encontro com Guapimirim começa aqui.</p>
         {location.state?.cadastroRealizado === true && <p role="status" className="mt-5 rounded-xl bg-folha/10 p-3 text-sm text-floresta">Cadastro realizado! Você já pode entrar com seu e-mail e senha.</p>}
+        {location.state?.areaRestrita === true && <p role="status" className="mt-5 rounded-xl bg-folha/10 p-3 text-sm text-floresta">Entre com uma conta de administrador para acessar essa área.</p>}
         {erro && <p id="erro-login" role="alert" className="mt-5 rounded-xl bg-red-50 p-3 text-sm text-red-800">{erro}</p>}
         <form onSubmit={enviar} className="mt-6 space-y-5" aria-busy={enviando} aria-describedby={erro ? 'erro-login' : undefined}>
           <fieldset disabled={enviando || carregandoInicial} className="space-y-5 disabled:opacity-70">

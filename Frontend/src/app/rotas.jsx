@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom'
 import LayoutPrincipal from '../componentes/layout/LayoutPrincipal'
+import RotaAdmin from '../componentes/rotas/RotaAdmin'
 import Agenda from '../funcionalidades/agenda/Agenda'
 import PainelAdmin from '../funcionalidades/administracao/PainelAdmin'
 import Cadastro from '../funcionalidades/autenticacao/Cadastro'
@@ -22,7 +23,10 @@ export const rotas = createBrowserRouter([
       { path: '/perfil', element: <Perfil /> },
       { path: '/login', element: <Login /> },
       { path: '/cadastro', element: <Cadastro /> },
-      { path: '/admin', element: <PainelAdmin /> },
+      {
+        element: <RotaAdmin />,
+        children: [{ path: '/admin', element: <PainelAdmin /> }],
+      },
     ],
   },
 ])
