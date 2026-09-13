@@ -10,6 +10,11 @@ export async function atualizarAtrativo(id, dados) {
   return resposta.data
 }
 
+export async function desativarAtrativo(id) {
+  const resposta = await api.delete(`/api/atrativos/${encodeURIComponent(id)}`)
+  if (resposta.status !== 204) throw new Error('Não foi possível confirmar a desativação.')
+}
+
 export async function listarAtrativos() {
   const resposta = await api.get('/api/atrativos')
   return resposta.data

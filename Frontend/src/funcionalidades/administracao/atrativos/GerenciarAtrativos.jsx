@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
-import { Accessibility, ArrowLeft, ArrowRight, CircleAlert, LoaderCircle, MapPin, Search, ShieldCheck, Ticket, X } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Accessibility, ArrowLeft, ArrowRight, CircleAlert, CircleOff, LoaderCircle, MapPin, Search, ShieldCheck, Ticket, X } from 'lucide-react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { listarAtrativos } from '../../../servicos/atrativoService'
+import { desativarAtrativo, listarAtrativos } from '../../../servicos/atrativoService'
+import ConfirmarDesativacao from './componentes/ConfirmarDesativacao'
 
 const foco = 'focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-floresta'
 const campo = `min-h-12 w-full rounded-xl border border-floresta/20 bg-white px-3 text-slate-700 ${foco}`
@@ -27,7 +28,7 @@ function formatarEntrada(atrativo) {
 function GerenciarAtrativos() {
   const location = useLocation()
   const navigate = useNavigate()
-  const [sucesso] = useState(() => location.state?.sucesso)
+  const [sucesso, setSucesso] = useState(() => location.state?.sucesso)
   useEffect(() => {
     if (location.state?.sucesso) navigate(location.pathname, { replace: true, state: null })
   }, [location.state, location.pathname, navigate])
@@ -37,6 +38,9 @@ function GerenciarAtrativos() {
   const [busca, setBusca] = useState('')
   const [categoria, setCategoria] = useState('')
   const [situacao, setSituacao] = useState('')
+  const [selecionado, setSelecionado] = useState(null)
+  const titulo = useRef(null)
+  const botaoOrigem = useRef(null)
 
   useEffect(() => {
     let ativo = true
@@ -77,6 +81,18 @@ function GerenciarAtrativos() {
     setSituacao('')
   }
 
+  async function confirmarDesativacao(id) {
+    await desativarAtrativo(id)
+    setAtrativos((atuais) => atuais.filter((item) => item.id !== id))
+    setSucesso('Atrativo desativado com sucesso.')
+    setSelecionado(null)
+  }
+
+  function sincronizarListagem() {
+    setEstado('carregando')
+    setTentativa((valor) => valor + 1)
+  }
+
   return (
     <div className="space-y-6 px-4 py-6 sm:px-6 sm:py-8">
       <Link to="/admin" className={`inline-flex min-h-12 items-center gap-2 rounded-lg font-semibold text-floresta ${foco}`}>
@@ -86,7 +102,7 @@ function GerenciarAtrativos() {
         <span className="inline-flex items-center gap-2 rounded-full bg-folha/10 px-3 py-1 text-sm font-semibold text-floresta">
           <ShieldCheck aria-hidden="true" className="size-4" /> Área administrativa
         </span>
-        <h1 id="titulo-gerenciar" className="mt-4 text-2xl font-bold text-floresta sm:text-3xl">Gerenciar atrativos</h1>
+        <h1 ref={titulo} tabIndex={-1} id="titulo-gerenciar" className={`mt-4 text-2xl font-bold text-floresta sm:text-3xl ${foco}`}>Gerenciar atrativos</h1>
         <Link to="/admin/atrativos/novo" className={`mt-4 inline-flex min-h-12 items-center rounded-full bg-floresta px-6 font-semibold text-white hover:bg-folha ${foco}`}>Novo atrativo</Link>
         <p className="mt-3 text-slate-600">Consulte os atrativos ativos e organize a visualização usando a busca e os filtros.</p>
         {estado === 'pronto' && <p className="mt-4 font-semibold text-floresta">Atrativos ativos: {atrativos.length}</p>}
@@ -119,6 +135,7 @@ function GerenciarAtrativos() {
                 <label htmlFor="categoria-atrativos" className="mb-2 block font-semibold text-floresta">Categoria</label>
                 <select id="categoria-atrativos" value={categoria} onChange={(evento) => setCategoria(evento.target.value)} className={campo}>
                   <option value="">Todas as categorias</option>
+                  {categoria && !categorias.some((item) => String(item.id) === categoria) && <option value={categoria}>Categoria selecionada (sem atrativos ativos)</option>}
                   {categorias.map((item) => <option key={item.id} value={item.id}>{item.nome ?? 'Categoria sem nome informado'}</option>)}
                 </select>
               </div>
@@ -126,6 +143,7 @@ function GerenciarAtrativos() {
                 <label htmlFor="situacao-atrativos" className="mb-2 block font-semibold text-floresta">Situação</label>
                 <select id="situacao-atrativos" value={situacao} onChange={(evento) => setSituacao(evento.target.value)} className={campo}>
                   <option value="">Todas as situações</option>
+                  {situacao && !situacoes.includes(situacao) && <option value={situacao}>{formatarSituacao(situacao)}</option>}
                   {situacoes.map((item) => <option key={item} value={item}>{formatarSituacao(item)}</option>)}
                 </select>
               </div>
@@ -157,12 +175,14 @@ function GerenciarAtrativos() {
                   </div>
                   <Link to={`/atrativos/${atrativo.id}`} aria-label={`Ver no aplicativo: ${atrativo.nome ?? 'atrativo'}`} className={`mt-auto inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-floresta px-4 py-2 font-semibold text-floresta hover:bg-creme ${foco}`}>Ver no aplicativo <ArrowRight aria-hidden="true" className="size-4" /></Link>
                   <Link to={`/admin/atrativos/${atrativo.id}/editar`} aria-label={`Editar: ${atrativo.nome}`} className={`mt-3 inline-flex min-h-12 items-center justify-center rounded-full bg-floresta px-4 py-2 font-semibold text-white hover:bg-folha ${foco}`}>Editar</Link>
+                  <button type="button" aria-label={`Desativar: ${atrativo.nome}`} disabled={Boolean(selecionado)} onClick={(evento) => { botaoOrigem.current = evento.currentTarget; setSucesso(''); setSelecionado(atrativo) }} className={`mt-3 inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-red-800 px-4 py-2 font-semibold text-red-800 hover:bg-red-50 disabled:text-slate-600 ${foco}`}><CircleOff aria-hidden="true" className="size-5 shrink-0" />Desativar</button>
                 </li>
               ))}
             </ul>
           )}
         </>
       ))}
+      {selecionado && <ConfirmarDesativacao key={selecionado.id} atrativo={selecionado} onConfirmar={confirmarDesativacao} onCancelar={() => setSelecionado(null)} onIndisponivel={sincronizarListagem} focoOrigem={botaoOrigem} focoAlternativo={titulo} />}
     </div>
   )
 }
