@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Accessibility, ArrowLeft, ArrowRight, CircleAlert, LoaderCircle, MapPin, Search, ShieldCheck, Ticket, X } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { listarAtrativos } from '../../../servicos/atrativoService'
 
 const foco = 'focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-floresta'
@@ -25,6 +25,12 @@ function formatarEntrada(atrativo) {
 }
 
 function GerenciarAtrativos() {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [sucesso] = useState(() => location.state?.sucesso)
+  useEffect(() => {
+    if (location.state?.sucesso) navigate(location.pathname, { replace: true, state: null })
+  }, [location.state, location.pathname, navigate])
   const [atrativos, setAtrativos] = useState([])
   const [estado, setEstado] = useState('carregando')
   const [tentativa, setTentativa] = useState(0)
@@ -81,9 +87,12 @@ function GerenciarAtrativos() {
           <ShieldCheck aria-hidden="true" className="size-4" /> Área administrativa
         </span>
         <h1 id="titulo-gerenciar" className="mt-4 text-2xl font-bold text-floresta sm:text-3xl">Gerenciar atrativos</h1>
+        <Link to="/admin/atrativos/novo" className={`mt-4 inline-flex min-h-12 items-center rounded-full bg-floresta px-6 font-semibold text-white hover:bg-folha ${foco}`}>Novo atrativo</Link>
         <p className="mt-3 text-slate-600">Consulte os atrativos ativos e organize a visualização usando a busca e os filtros.</p>
         {estado === 'pronto' && <p className="mt-4 font-semibold text-floresta">Atrativos ativos: {atrativos.length}</p>}
       </section>
+
+      {sucesso && <p role="status" className="rounded-2xl border border-folha/30 bg-white p-5 font-semibold text-floresta">{sucesso}</p>}
 
       {estado === 'carregando' && <p role="status" className="flex items-center gap-3 rounded-2xl bg-white p-6 text-floresta"><LoaderCircle aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" /> Carregando atrativos…</p>}
       {estado === 'erro' && (
@@ -147,6 +156,7 @@ function GerenciarAtrativos() {
                     {atrativo.endereco && <p className="flex items-start gap-2"><MapPin aria-hidden="true" className="size-5 shrink-0" />{atrativo.endereco}</p>}
                   </div>
                   <Link to={`/atrativos/${atrativo.id}`} aria-label={`Ver no aplicativo: ${atrativo.nome ?? 'atrativo'}`} className={`mt-auto inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-floresta px-4 py-2 font-semibold text-floresta hover:bg-creme ${foco}`}>Ver no aplicativo <ArrowRight aria-hidden="true" className="size-4" /></Link>
+                  <Link to={`/admin/atrativos/${atrativo.id}/editar`} aria-label={`Editar: ${atrativo.nome}`} className={`mt-3 inline-flex min-h-12 items-center justify-center rounded-full bg-floresta px-4 py-2 font-semibold text-white hover:bg-folha ${foco}`}>Editar</Link>
                 </li>
               ))}
             </ul>
