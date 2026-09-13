@@ -6,6 +6,7 @@ import PainelAdmin from '../funcionalidades/administracao/PainelAdmin'
 import GerenciarAtrativos from '../funcionalidades/administracao/atrativos/GerenciarAtrativos'
 import SalvarAtrativo from '../funcionalidades/administracao/atrativos/SalvarAtrativo'
 import GerenciarImagensAtrativo from '../funcionalidades/administracao/atrativos/imagens/GerenciarImagensAtrativo'
+import GerenciarHorariosAtrativo from '../funcionalidades/administracao/atrativos/horarios/GerenciarHorariosAtrativo'
 import Cadastro from '../funcionalidades/autenticacao/Cadastro'
 import Login from '../funcionalidades/autenticacao/Login'
 import DetalheAtrativo from '../funcionalidades/atrativos/DetalheAtrativo'
@@ -34,6 +35,7 @@ export const rotas = createBrowserRouter([
           { path: '/admin/atrativos/novo', element: <SalvarAtrativo /> },
           { path: '/admin/atrativos/:id/editar', element: <SalvarAtrativo /> },
           { path: '/admin/atrativos/:atrativoId/imagens', element: <GerenciarImagensAtrativo /> },
+          { path: '/admin/atrativos/:atrativoId/horarios', element: <GerenciarHorariosAtrativo /> },
         ],
       },
     ],
