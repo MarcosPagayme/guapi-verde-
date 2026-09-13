@@ -28,6 +28,11 @@ function PainelAdmin() {
         <p className="mt-2 text-sm leading-relaxed text-slate-600">Consulte e organize os atrativos cadastrados.</p>
       </Link>
 
+        <Link to="/admin/categorias" className="mb-8 block rounded-2xl border border-floresta/10 bg-white p-6 shadow-sm transition-colors hover:bg-folha/5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-floresta">
+          <ListFilter aria-hidden="true" className="mb-4 size-7 text-folha" />
+          <h2 className="text-xl font-bold text-floresta">Gerenciar categorias</h2>
+          <p className="mt-2 text-sm leading-relaxed text-slate-600">Organize as categorias utilizadas pelos atrativos.</p>
+        </Link>
       <section aria-labelledby="titulo-acessos-publicos">
         <h2 id="titulo-acessos-publicos" className="text-xl font-bold text-floresta">Acessos rápidos</h2>
         <p className="mt-2 text-sm leading-relaxed text-slate-600">Os links abrem o conteúdo público para visualização. A edição ainda não está disponível.</p>

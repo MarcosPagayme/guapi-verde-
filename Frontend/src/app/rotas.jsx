@@ -3,6 +3,7 @@ import LayoutPrincipal from '../componentes/layout/LayoutPrincipal'
 import RotaAdmin from '../componentes/rotas/RotaAdmin'
 import Agenda from '../funcionalidades/agenda/Agenda'
 import PainelAdmin from '../funcionalidades/administracao/PainelAdmin'
+import GerenciarCategorias from '../funcionalidades/administracao/categorias/GerenciarCategorias'
 import GerenciarAtrativos from '../funcionalidades/administracao/atrativos/GerenciarAtrativos'
 import SalvarAtrativo from '../funcionalidades/administracao/atrativos/SalvarAtrativo'
 import GerenciarImagensAtrativo from '../funcionalidades/administracao/atrativos/imagens/GerenciarImagensAtrativo'
@@ -31,6 +32,7 @@ export const rotas = createBrowserRouter([
         element: <RotaAdmin />,
         children: [
           { path: '/admin', element: <PainelAdmin /> },
+          { path: '/admin/categorias', element: <GerenciarCategorias /> },
           { path: '/admin/atrativos', element: <GerenciarAtrativos /> },
           { path: '/admin/atrativos/novo', element: <SalvarAtrativo /> },
           { path: '/admin/atrativos/:id/editar', element: <SalvarAtrativo /> },
