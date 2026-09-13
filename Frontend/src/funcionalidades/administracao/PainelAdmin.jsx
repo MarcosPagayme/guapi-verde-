@@ -1,4 +1,4 @@
-import { CalendarDays, MapPin, ShieldCheck, Ticket } from 'lucide-react'
+import { CalendarDays, ListFilter, MapPin, ShieldCheck, Ticket } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 
@@ -19,8 +19,14 @@ function PainelAdmin() {
         </span>
         <h1 id="titulo-painel-admin" className="mt-4 text-2xl font-bold text-floresta sm:text-3xl">Painel administrativo</h1>
         <p className="mt-3 text-lg font-semibold [overflow-wrap:anywhere]">Olá, {usuario.nome}!</p>
-        <p className="mt-2 max-w-2xl leading-relaxed text-slate-600">Esta área será usada para gerenciar o conteúdo exibido no Guapi Verde. Por enquanto, você pode visualizar as páginas públicas pelos acessos abaixo.</p>
+        <p className="mt-2 max-w-2xl leading-relaxed text-slate-600">Consulte os atrativos ativos cadastrados e acesse as páginas públicas do Guapi Verde.</p>
       </section>
+
+      <Link to="/admin/atrativos" className="block rounded-2xl border border-floresta/10 bg-white p-6 shadow-sm transition-colors hover:bg-folha/5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-floresta">
+        <ListFilter aria-hidden="true" className="mb-4 size-7 text-folha" />
+        <h2 className="text-xl font-bold text-floresta">Gerenciar atrativos</h2>
+        <p className="mt-2 text-sm leading-relaxed text-slate-600">Consulte e organize os atrativos cadastrados.</p>
+      </Link>
 
       <section aria-labelledby="titulo-acessos-publicos">
         <h2 id="titulo-acessos-publicos" className="text-xl font-bold text-floresta">Acessos rápidos</h2>

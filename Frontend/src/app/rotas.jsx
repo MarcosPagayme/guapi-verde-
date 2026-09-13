@@ -3,6 +3,7 @@ import LayoutPrincipal from '../componentes/layout/LayoutPrincipal'
 import RotaAdmin from '../componentes/rotas/RotaAdmin'
 import Agenda from '../funcionalidades/agenda/Agenda'
 import PainelAdmin from '../funcionalidades/administracao/PainelAdmin'
+import GerenciarAtrativos from '../funcionalidades/administracao/atrativos/GerenciarAtrativos'
 import Cadastro from '../funcionalidades/autenticacao/Cadastro'
 import Login from '../funcionalidades/autenticacao/Login'
 import DetalheAtrativo from '../funcionalidades/atrativos/DetalheAtrativo'
@@ -25,7 +26,10 @@ export const rotas = createBrowserRouter([
       { path: '/cadastro', element: <Cadastro /> },
       {
         element: <RotaAdmin />,
-        children: [{ path: '/admin', element: <PainelAdmin /> }],
+        children: [
+          { path: '/admin', element: <PainelAdmin /> },
+          { path: '/admin/atrativos', element: <GerenciarAtrativos /> },
+        ],
       },
     ],
   },
