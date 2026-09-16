@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Eye, EyeOff, Leaf, LoaderCircle } from 'lucide-react'
+import { Eye, EyeOff, LoaderCircle } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { mensagemErroAuth } from '../../servicos/authService'
+import logoGuapiVerde from '../../assets/Logo_GUAPIVERDE.png'
 
 function Login() {
   const { login, carregandoInicial } = useAuth()
@@ -47,9 +48,8 @@ function Login() {
   return (
     <section className="mx-auto max-w-md px-4 py-8 sm:py-12" aria-labelledby="titulo-login">
       <div className="rounded-3xl border border-floresta/10 bg-white p-6 shadow-sm sm:p-8">
-        <Leaf className="mb-4 text-folha" size={32} aria-hidden="true" />
-        <p className="text-sm font-semibold text-folha">Guapi Verde</p>
-        <h1 id="titulo-login" className="mt-2 text-3xl font-bold text-floresta">Entre na sua conta</h1>
+        <img src={logoGuapiVerde} alt="Guapi Verde" className="mx-auto mb-4 h-auto w-full max-w-48 object-contain" />
+        <h1 id="titulo-login" className="text-3xl font-bold text-floresta">Entre na sua conta</h1>
         <p className="mt-3 text-sm text-floresta/75">Seu próximo encontro com Guapimirim começa aqui.</p>
         {location.state?.cadastroRealizado === true && <p role="status" className="mt-5 rounded-xl bg-folha/10 p-3 text-sm text-floresta">Cadastro realizado! Você já pode entrar com seu e-mail e senha.</p>}
         {location.state?.areaRestrita === true && <p role="status" className="mt-5 rounded-xl bg-folha/10 p-3 text-sm text-floresta">Entre com uma conta de administrador para acessar essa área.</p>}
