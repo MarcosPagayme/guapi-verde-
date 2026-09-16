@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Eye, EyeOff, Leaf, LoaderCircle } from 'lucide-react'
+import { Eye, EyeOff, LoaderCircle } from 'lucide-react'
 import { cadastrarVisitante, mensagemErroAuth } from '../../servicos/authService'
+import logoGuapiVerde from '../../assets/Logo_GUAPIVERDE.png'
 
 function Cadastro() {
   const navigate = useNavigate()
@@ -46,9 +47,8 @@ function Cadastro() {
   return (
     <section className="mx-auto max-w-md px-4 py-8 sm:py-12" aria-labelledby="titulo-cadastro">
       <div className="rounded-3xl border border-floresta/10 bg-white p-6 shadow-sm sm:p-8">
-        <Leaf className="mb-4 text-folha" size={32} aria-hidden="true" />
-        <p className="text-sm font-semibold text-folha">Guapi Verde</p>
-        <h1 id="titulo-cadastro" className="mt-2 text-3xl font-bold text-floresta">Crie sua conta</h1>
+        <img src={logoGuapiVerde} alt="Guapi Verde" className="mx-auto mb-4 h-auto w-full max-w-48 object-contain" />
+        <h1 id="titulo-cadastro" className="text-3xl font-bold text-floresta">Crie sua conta</h1>
         <p className="mt-3 text-sm text-floresta/75">Faça parte e descubra mais de Guapimirim.</p>
         {erro && <p id="erro-cadastro" role="alert" className="mt-5 rounded-xl bg-red-50 p-3 text-sm text-red-800">{erro}</p>}
         <form onSubmit={enviar} className="mt-6 space-y-5" aria-busy={enviando} aria-describedby={erro ? 'erro-cadastro' : undefined}>
