@@ -47,44 +47,66 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DataInitializr implements ApplicationRunner {
 
-    private final EntityManager entityManager;
-    private final PasswordEncoder codificadorDeSenha;
+private final EntityManager entityManager;
+private final PasswordEncoder codificadorDeSenha;
 
-    private static final String FOTO_CAPELA = "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1f/"
+private static final String FOTO_CAPELA = "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1f/"
             + "Capela_de_Nossa_Senhora_da_Concei%C3%A7%C3%A3o_HDR.jpg/"
             + "1280px-Capela_de_Nossa_Senhora_da_Concei%C3%A7%C3%A3o_HDR.jpg";
-    private static final String FOTO_SEDE = "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/"
+private static final String FOTO_SEDE = "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/"
             + "Cachoeira_do_Parque_Nacional_da_Serra_dos_%C3%93rg%C3%A3os_Sede_Guapimirim.jpg/"
             + "1280px-Cachoeira_do_Parque_Nacional_da_Serra_dos_%C3%93rg%C3%A3os_Sede_Guapimirim.jpg";
-    private static final String TEXTO_ALTERNATIVO_SEDE = "Cachoeira no Parque Nacional da Serra dos Órgãos, Sede Guapimirim. "
-            + "Foto: Ferreiraandreza / Wikimedia Commons, CC BY-SA 3.0.";
-    private static final String TEXTO_ALTERNATIVO_CAPELA = "Capela na sede Guapimirim do PARNASO. "
-            + "Foto: Filipo tardim / Wikimedia Commons, CC BY-SA 4.0.";
+private static final String FOTO_POCO_VERDE =
+        "https://www.vamostrilhar.com.br/wp-content/uploads/2023/11/Chegada-no-Poco-Verde-Parnaso-Guapimirim-Vamos-Trilhar.webp";
 
-    @Override
-    @Transactional
+private static final String FOTO_POCO_PREGUICA =
+        "https://www.vamostrilhar.com.br/wp-content/uploads/2023/11/Outra-parte-do-Poco-da-Preguica-Parnaso-Guapimirim-Vamos-Trilhar-1024x768.webp";
+
+private static final String TEXTO_ALTERNATIVO_POCO_VERDE =
+        "Poço Verde no Parque Nacional da Serra dos Órgãos, em Guapimirim.";
+
+private static final String TEXTO_ALTERNATIVO_POCO_PREGUICA =
+        "Poço da Preguiça no Parque Nacional da Serra dos Órgãos, em Guapimirim.";
+private static final String TEXTO_ALTERNATIVO_SEDE = "Cachoeira no Parque Nacional da Serra dos Órgãos, Sede Guapimirim. "
+            + "Foto: Ferreiraandreza / Wikimedia Commons, CC BY-SA 3.0.";
+private static final String TEXTO_ALTERNATIVO_CAPELA = "Capela na sede Guapimirim do PARNASO."
+     + "Foto: Filipo tardim / Wikimedia Commons, CC BY-SA 4.0.";
+      @Override
+      @Transactional
     public void run(ApplicationArguments argumentos) {
         log.info("Iniciando dados iniciais do Guapi Verde.");
         // Serializa inicializadores de várias instâncias no mesmo PostgreSQL até o commit.
         entityManager.createNativeQuery("SELECT pg_advisory_xact_lock(71420260910)").getSingleResult();
         Map<String, Integer> adicionados = new LinkedHashMap<>();
-        var natureza = categoria("Natureza", "Áreas naturais de Guapimirim.", adicionados);
-        var patrimonio = categoria("Patrimônio histórico", "Construções históricas de Guapimirim.", adicionados);
-        var sede = atrativo("Parque Nacional da Serra dos Órgãos - Sede Guapimirim", natureza,
+var natureza = categoria("Natureza", "Áreas naturais de Guapimirim.", adicionados);
+var patrimonio = categoria("Patrimônio histórico", "Construções históricas de Guapimirim.", adicionados);
+var sede = atrativo("Parque Nacional da Serra dos Órgãos - Sede Guapimirim", natureza,
                 "Sede do PARNASO com poços e cachoeiras do rio Soberbo.",
                 "Acesso pela BR-116, km 101, Guapimirim/RJ. Inclui a Capela de Nossa Senhora da Conceição do Soberbo. "
                         + "Acessibilidade não verificada: o indicador false nesta carga não constitui avaliação do local.",
                 SituacaoAtrativo.ABERTO, adicionados);
-        var capela = atrativo("Capela de Nossa Senhora da Conceição do Soberbo", patrimonio,
+var capela = atrativo("Capela de Nossa Senhora da Conceição do Soberbo", patrimonio,
                 "Construção histórica de 1713 em uma ilha do rio Soberbo.",
                 "Capela barroca tombada pelo INEPAC, na sede Guapimirim do PARNASO. "
                         + "Capela e ponte fechadas para manutenção segundo o ICMBio na consulta de 10/09/2026.",
                 SituacaoAtrativo.FECHADO_TEMPORARIAMENTE, adicionados);
+var pocoVerde = atrativo("Poço Verde", natureza,
+        "Poço natural de águas cristalinas na sede Guapimirim do PARNASO.",
+        "Atrativo natural localizado no Parque Nacional da Serra dos Órgãos, "
+                + "na sede Guapimirim, com acesso por trilha.",
+        SituacaoAtrativo.ABERTO, adicionados);
+
+var pocoPreguica = atrativo("Poço da Preguiça", natureza,
+        "Poço natural localizado na sede Guapimirim do PARNASO.",
+        "Atrativo natural do Parque Nacional da Serra dos Órgãos, "
+                + "na sede Guapimirim, acessível por caminhada.",
+SituacaoAtrativo.ABERTO, adicionados);
         horarios(sede, adicionados);
         migrarImagemDaSede(sede);
         imagem(sede, FOTO_SEDE, TEXTO_ALTERNATIVO_SEDE, adicionados);
         imagem(capela, FOTO_CAPELA, TEXTO_ALTERNATIVO_CAPELA, adicionados);
-
+imagem(pocoVerde, FOTO_POCO_VERDE, TEXTO_ALTERNATIVO_POCO_VERDE, adicionados);
+imagem(pocoPreguica, FOTO_POCO_PREGUICA, TEXTO_ALTERNATIVO_POCO_PREGUICA, adicionados);
         var inverno = temporada("Festival de Inverno de Guapimirim 2025", "2025-07-24", "2025-08-03", adicionados);
         var gospel = temporada("Final do Guapi Gospel Festival 2025", "2025-04-19", "2025-04-19", adicionados);
         evento("Abertura do VII Festival de Inverno de Guapimirim", inverno,
