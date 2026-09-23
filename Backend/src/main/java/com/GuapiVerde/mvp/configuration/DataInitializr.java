@@ -47,74 +47,115 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DataInitializr implements ApplicationRunner {
 
-private final EntityManager entityManager;
-private final PasswordEncoder codificadorDeSenha;
+    private final EntityManager entityManager;
+    private final PasswordEncoder codificadorDeSenha;
 
-private static final String FOTO_CAPELA = "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1f/"
+    private static final String FOTO_CAPELA = "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1f/"
             + "Capela_de_Nossa_Senhora_da_Concei%C3%A7%C3%A3o_HDR.jpg/"
             + "1280px-Capela_de_Nossa_Senhora_da_Concei%C3%A7%C3%A3o_HDR.jpg";
-private static final String FOTO_SEDE = "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/"
+    private static final String FOTO_SEDE = "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/"
             + "Cachoeira_do_Parque_Nacional_da_Serra_dos_%C3%93rg%C3%A3os_Sede_Guapimirim.jpg/"
             + "1280px-Cachoeira_do_Parque_Nacional_da_Serra_dos_%C3%93rg%C3%A3os_Sede_Guapimirim.jpg";
-private static final String FOTO_POCO_VERDE =
-        "https://www.vamostrilhar.com.br/wp-content/uploads/2023/11/Chegada-no-Poco-Verde-Parnaso-Guapimirim-Vamos-Trilhar.webp";
+    private static final String FOTO_POCO_VERDE = "https://www.vamostrilhar.com.br/wp-content/uploads/2023/11/Chegada-no-Poco-Verde-Parnaso-Guapimirim-Vamos-Trilhar.webp";
 
-private static final String FOTO_POCO_PREGUICA =
-        "https://www.vamostrilhar.com.br/wp-content/uploads/2023/11/Outra-parte-do-Poco-da-Preguica-Parnaso-Guapimirim-Vamos-Trilhar-1024x768.webp";
+    private static final String FOTO_POCO_PREGUICA = "https://www.vamostrilhar.com.br/wp-content/uploads/2023/11/Outra-parte-do-Poco-da-Preguica-Parnaso-Guapimirim-Vamos-Trilhar-1024x768.webp";
 
-private static final String TEXTO_ALTERNATIVO_POCO_VERDE =
-        "Poço Verde no Parque Nacional da Serra dos Órgãos, em Guapimirim.";
+    private static final String TEXTO_ALTERNATIVO_POCO_VERDE = "Poço Verde no Parque Nacional da Serra dos Órgãos, em Guapimirim.";
 
-private static final String TEXTO_ALTERNATIVO_POCO_PREGUICA =
-        "Poço da Preguiça no Parque Nacional da Serra dos Órgãos, em Guapimirim.";
-private static final String TEXTO_ALTERNATIVO_SEDE = "Cachoeira no Parque Nacional da Serra dos Órgãos, Sede Guapimirim. "
+    private static final String TEXTO_ALTERNATIVO_POCO_PREGUICA = "Poço da Preguiça no Parque Nacional da Serra dos Órgãos, em Guapimirim.";
+    private static final String TEXTO_ALTERNATIVO_SEDE = "Cachoeira no Parque Nacional da Serra dos Órgãos, Sede Guapimirim. "
             + "Foto: Ferreiraandreza / Wikimedia Commons, CC BY-SA 3.0.";
-private static final String TEXTO_ALTERNATIVO_CAPELA = "Capela na sede Guapimirim do PARNASO."
-     + "Foto: Filipo tardim / Wikimedia Commons, CC BY-SA 4.0.";
-      @Override
-      @Transactional
+    private static final String TEXTO_ALTERNATIVO_CAPELA = "Capela na sede Guapimirim do PARNASO."
+            + "Foto: Filipo tardim / Wikimedia Commons, CC BY-SA 4.0.";
+
+    @Override
+    @Transactional
     public void run(ApplicationArguments argumentos) {
         log.info("Iniciando dados iniciais do Guapi Verde.");
-        // Serializa inicializadores de várias instâncias no mesmo PostgreSQL até o commit.
+        // Serializa inicializadores de várias instâncias no mesmo PostgreSQL até o
+        // commit.
         entityManager.createNativeQuery("SELECT pg_advisory_xact_lock(71420260910)").getSingleResult();
         Map<String, Integer> adicionados = new LinkedHashMap<>();
-var natureza = categoria("Natureza", "Áreas naturais de Guapimirim.", adicionados);
-var patrimonio = categoria("Patrimônio histórico", "Construções históricas de Guapimirim.", adicionados);
-var sede = atrativo("Parque Nacional da Serra dos Órgãos - Sede Guapimirim", natureza,
+        var natureza = categoria("Natureza", "Áreas naturais de Guapimirim.", adicionados);
+        var patrimonio = categoria("Patrimônio histórico", "Construções históricas de Guapimirim.", adicionados);
+        var sede = atrativo("Parque Nacional da Serra dos Órgãos - Sede Guapimirim", natureza,
                 "Sede do PARNASO com poços e cachoeiras do rio Soberbo.",
                 "Acesso pela BR-116, km 101, Guapimirim/RJ. Inclui a Capela de Nossa Senhora da Conceição do Soberbo. "
                         + "Acessibilidade não verificada: o indicador false nesta carga não constitui avaliação do local.",
                 SituacaoAtrativo.ABERTO, adicionados);
-var capela = atrativo("Capela de Nossa Senhora da Conceição do Soberbo", patrimonio,
+        var capela = atrativo("Capela de Nossa Senhora da Conceição do Soberbo", patrimonio,
                 "Construção histórica de 1713 em uma ilha do rio Soberbo.",
                 "Capela barroca tombada pelo INEPAC, na sede Guapimirim do PARNASO. "
                         + "Capela e ponte fechadas para manutenção segundo o ICMBio na consulta de 10/09/2026.",
                 SituacaoAtrativo.FECHADO_TEMPORARIAMENTE, adicionados);
-var pocoVerde = atrativo("Poço Verde", natureza,
-        "Poço natural de águas cristalinas na sede Guapimirim do PARNASO.",
-        "Atrativo natural localizado no Parque Nacional da Serra dos Órgãos, "
-                + "na sede Guapimirim, com acesso por trilha.",
-        SituacaoAtrativo.ABERTO, adicionados);
+        var pocoVerde = atrativo("Poço Verde", natureza,
+                "Poço natural de águas cristalinas na sede Guapimirim do PARNASO.",
+                "Atrativo natural localizado no Parque Nacional da Serra dos Órgãos, "
+                        + "na sede Guapimirim, com acesso por trilha.",
+                SituacaoAtrativo.ABERTO, adicionados);
 
-var pocoPreguica = atrativo("Poço da Preguiça", natureza,
-        "Poço natural localizado na sede Guapimirim do PARNASO.",
-        "Atrativo natural do Parque Nacional da Serra dos Órgãos, "
-                + "na sede Guapimirim, acessível por caminhada.",
-SituacaoAtrativo.ABERTO, adicionados);
+        var pocoPreguica = atrativo("Poço da Preguiça", natureza,
+                "Poço natural localizado na sede Guapimirim do PARNASO.",
+                "Atrativo natural do Parque Nacional da Serra dos Órgãos, "
+                        + "na sede Guapimirim, acessível por caminhada.",
+                SituacaoAtrativo.ABERTO, adicionados);
         horarios(sede, adicionados);
         migrarImagemDaSede(sede);
         imagem(sede, FOTO_SEDE, TEXTO_ALTERNATIVO_SEDE, adicionados);
         imagem(capela, FOTO_CAPELA, TEXTO_ALTERNATIVO_CAPELA, adicionados);
-imagem(pocoVerde, FOTO_POCO_VERDE, TEXTO_ALTERNATIVO_POCO_VERDE, adicionados);
-imagem(pocoPreguica, FOTO_POCO_PREGUICA, TEXTO_ALTERNATIVO_POCO_PREGUICA, adicionados);
-        var inverno = temporada("Festival de Inverno de Guapimirim 2025", "2025-07-24", "2025-08-03", adicionados);
-        var gospel = temporada("Final do Guapi Gospel Festival 2025", "2025-04-19", "2025-04-19", adicionados);
-        evento("Abertura do VII Festival de Inverno de Guapimirim", inverno,
-                "2025-07-24T19:00:00", "2025-07-24T22:00:00", "Casa de Viseu - Sede Campestre, Guapimirim/RJ",
-                "Registro histórico: cerimônia de abertura com Raul Seixas - O Musical, em homenagem a Mauro Motta.", adicionados);
-        evento("Final do Guapi Gospel Festival 2025", gospel,
-                "2025-04-19T19:00:00", null, "Praça Paulo Terra, Centro, Guapimirim/RJ",
-                "Registro histórico: final do festival de música gospel promovido pela Prefeitura de Guapimirim.", adicionados);
+        imagem(pocoVerde, FOTO_POCO_VERDE, TEXTO_ALTERNATIVO_POCO_VERDE, adicionados);
+        imagem(pocoPreguica, FOTO_POCO_PREGUICA, TEXTO_ALTERNATIVO_POCO_PREGUICA, adicionados);
+        var flig = temporada(
+                "FLIG - Feira Literária de Guapimirim (Demonstração)",
+                "2026-10-09",
+                "2026-10-13",
+                adicionados);
+
+        var inverno = temporada(
+                "Festival de Inverno de Guapimirim (Demonstração)",
+                "2026-11-06",
+                "2026-11-09",
+                adicionados);
+
+        var natal = temporada(
+                "Fantástico Natal de Guapimirim (Demonstração)",
+                "2026-12-05",
+                "2027-01-16",
+                adicionados);
+
+        evento(
+                "FLIG - Feira Literária de Guapimirim (Demonstração)",
+                flig,
+                "2026-10-09T10:00:00",
+                "2026-10-13T20:00:00",
+                "Guapimirim/RJ",
+                "Evento de demonstração baseado na FLIG, feira literária realizada em Guapimirim. "
+                        + "As datas utilizadas nesta carga são exclusivamente para demonstração do sistema.","https://s2-extra.glbimg.com/PSQcCn8NWZgoGE2jM1crX4WL20w%3D/0x0%3A1600x900/984x0/smart/filters%3Astrip_icc%28%29/i.s3.glbimg.com/v1/AUTH_1f551ea7087a47f39ead75f64041559a/internal_photos/bs/2024/I/f/zIdMxVTISWVIwqAZFqhg/feira-literaria-de-guapimirim-2023-fotos-divulgacao-2-.jpg",
+                adicionados);
+
+        evento(
+        "Festival de Inverno de Guapimirim (Demonstração)",
+        inverno,
+        "2026-11-06T18:00:00",
+        "2026-11-09T23:00:00",
+        "Guapimirim/RJ",
+        "Evento de demonstração baseado no Festival de Inverno de Guapimirim. "
+                + "As datas utilizadas nesta carga são exclusivamente para demonstração do sistema.",
+        "https://www.fcvbrj.org.br/Midia/Fotos/1000035784.jpg",
+        adicionados
+);
+
+        evento(
+        "Fantástico Natal de Guapimirim (Demonstração)",
+        natal,
+        "2026-12-05T18:00:00",
+        "2027-01-16T22:00:00",
+        "Guapimirim/RJ",
+        "Evento de demonstração baseado no Fantástico Natal de Guapimirim. "
+                + "As datas utilizadas nesta carga são exclusivamente para demonstração do sistema.",
+        "https://odia.ig.com.br/_midias/jpg/2026/01/26/385x420/1_dsc_9285__1_-37974184.jpg",
+        adicionados
+);
 
         var paraiso = parceiro("Paraíso da Serra", "https://www.paraisoserra.com/", "(21) 2040-3333",
                 "Estabelecimento na Estrada Rio Teresópolis, km 90, Guapimirim/RJ.", adicionados);
@@ -123,8 +164,10 @@ imagem(pocoPreguica, FOTO_POCO_PREGUICA, TEXTO_ALTERNATIVO_POCO_PREGUICA, adicio
         campanhaECupom(paraiso, "DEMO-GUAPI-01", adicionados);
         campanhaECupom(pousada, "DEMO-GUAPI-02", adicionados);
 
-        var administrador = usuario("usuario.demo1@example.com", "Administrador de demonstração", PerfilUsuario.ADMIN, adicionados);
-        var visitante = usuario("usuario.demo2@example.com", "Visitante de demonstração", PerfilUsuario.VISITANTE, adicionados);
+        var administrador = usuario("usuario.demo1@example.com", "Administrador de demonstração", PerfilUsuario.ADMIN,
+                adicionados);
+        var visitante = usuario("usuario.demo2@example.com", "Visitante de demonstração", PerfilUsuario.VISITANTE,
+                adicionados);
         dadosDoUsuario(administrador, natureza, sede, adicionados);
         dadosDoUsuario(visitante, patrimonio, capela, adicionados);
         novidade(administrador, "DEMONSTRAÇÃO - Conheça a sede Guapimirim", sede.getResumo(), adicionados);
@@ -164,7 +207,7 @@ imagem(pocoPreguica, FOTO_POCO_PREGUICA, TEXTO_ALTERNATIVO_POCO_PREGUICA, adicio
     }
 
     private void horarios(Atrativo sede, Map<String, Integer> adicionados) {
-        for (String dia : new String[]{"SEGUNDA", "TERCA", "QUARTA", "QUINTA", "SEXTA", "SABADO", "DOMINGO"}) {
+        for (String dia : new String[] { "SEGUNDA", "TERCA", "QUARTA", "QUINTA", "SEXTA", "SABADO", "DOMINGO" }) {
             obterOuCriar(HorarioFuncionamento.class, "e.atrativo = :atrativo and lower(e.diaSemana) = lower(:dia)",
                     Map.of("atrativo", sede, "dia", dia), () -> {
                         var dado = new HorarioFuncionamento();
@@ -175,7 +218,8 @@ imagem(pocoPreguica, FOTO_POCO_PREGUICA, TEXTO_ALTERNATIVO_POCO_PREGUICA, adicio
                             dado.setHorarioAbertura(LocalTime.of(8, 0));
                             dado.setHorarioFechamento(LocalTime.of(17, 0));
                         }
-                        dado.setObservacao("Entrada até 16h; saída até 17h. Segunda abre se feriado nacional/estadual RJ ou sua véspera. Fonte: ICMBio, PROV 01/2025.");
+                        dado.setObservacao(
+                                "Entrada até 16h; saída até 17h. Segunda abre se feriado nacional/estadual RJ ou sua véspera. Fonte: ICMBio, PROV 01/2025.");
                         return dado;
                     }, adicionados);
         }
@@ -214,7 +258,8 @@ imagem(pocoPreguica, FOTO_POCO_PREGUICA, TEXTO_ALTERNATIVO_POCO_PREGUICA, adicio
                     dado.setUrl(url);
                     dado.setTextoAlternativo(textoAlternativo);
                     long principais = entityManager.createQuery(
-                            "select count(e) from ImagemAtrativo e where e.atrativo = :atrativo and e.principal = true", Long.class)
+                            "select count(e) from ImagemAtrativo e where e.atrativo = :atrativo and e.principal = true",
+                            Long.class)
                             .setParameter("atrativo", atrativo).getSingleResult();
                     dado.setPrincipal(principais == 0);
                     dado.setOrdem(0);
@@ -227,37 +272,43 @@ imagem(pocoPreguica, FOTO_POCO_PREGUICA, TEXTO_ALTERNATIVO_POCO_PREGUICA, adicio
                 Map.of("nome", nome, "inicio", LocalDate.parse(inicio)), () -> {
                     var dado = new Temporada();
                     dado.setNome(nome);
-                    dado.setDescricao("Agrupamento histórico da programação: " + nome + ". Não representa agenda futura.");
+                    dado.setDescricao(
+                            "Agrupamento histórico da programação: " + nome + ". Não representa agenda futura.");
                     dado.setDataInicio(LocalDate.parse(inicio));
                     dado.setDataFim(LocalDate.parse(fim));
                     return dado;
                 }, adicionados);
     }
 
-    private void evento(String nome, Temporada temporada, String inicio, String fim, String local,
-            String descricao, Map<String, Integer> adicionados) {
-        obterOuCriar(Evento.class, "lower(e.nome) = lower(:nome) and e.dataHoraInicio = :inicio",
-                Map.of("nome", nome, "inicio", LocalDateTime.parse(inicio)), () -> {
-                    var dado = new Evento();
-                    dado.setNome(nome);
-                    dado.setResumo(descricao);
-                    dado.setDescricao(descricao);
-                    dado.setTemporada(temporada);
-                    dado.setDataHoraInicio(LocalDateTime.parse(inicio));
-                    dado.setDataHoraFim(fim == null ? null : LocalDateTime.parse(fim));
-                    dado.setLocal(local);
-                    dado.setAtivo(temporada.getAtivo());
-                    return dado;
-                }, adicionados);
-    }
+ private void evento(String nome, Temporada temporada, String inicio, String fim, String local,
+        String descricao, String imagemUrl, Map<String, Integer> adicionados) {
 
-    private Parceiro parceiro(String nome, String site, String telefone, String descricao, Map<String, Integer> adicionados) {
+    obterOuCriar(Evento.class, "lower(e.nome) = lower(:nome) and e.dataHoraInicio = :inicio",
+            Map.of("nome", nome, "inicio", LocalDateTime.parse(inicio)), () -> {
+                var dado = new Evento();
+
+                dado.setNome(nome);
+                dado.setResumo(descricao);
+                dado.setDescricao(descricao);
+                dado.setTemporada(temporada);
+                dado.setDataHoraInicio(LocalDateTime.parse(inicio));
+                dado.setDataHoraFim(fim == null ? null : LocalDateTime.parse(fim));
+                dado.setLocal(local);
+                dado.setImagemUrl(imagemUrl);
+                dado.setAtivo(temporada.getAtivo());
+
+                return dado;
+            }, adicionados);
+}
+    private Parceiro parceiro(String nome, String site, String telefone, String descricao,
+            Map<String, Integer> adicionados) {
         return obterOuCriar(Parceiro.class, "lower(e.nome) = lower(:nome)", Map.of("nome", nome), () -> {
             var dado = new Parceiro();
             dado.setNome(nome);
             dado.setSite(site);
             dado.setTelefone(telefone);
-            dado.setDescricao(descricao + " Cadastro de DEMONSTRAÇÃO baseado em informação pública; parceria com o Guapi Verde não confirmada.");
+            dado.setDescricao(descricao
+                    + " Cadastro de DEMONSTRAÇÃO baseado em informação pública; parceria com o Guapi Verde não confirmada.");
             dado.setAtivo(true);
             return dado;
         }, adicionados);
@@ -270,7 +321,8 @@ imagem(pocoPreguica, FOTO_POCO_PREGUICA, TEXTO_ALTERNATIVO_POCO_PREGUICA, adicio
                     var dado = new Campanha();
                     dado.setParceiro(parceiro);
                     dado.setTitulo(titulo);
-                    dado.setDescricao("DEMONSTRAÇÃO técnica sem valor comercial. Não é oferta do estabelecimento relacionado.");
+                    dado.setDescricao(
+                            "DEMONSTRAÇÃO técnica sem valor comercial. Não é oferta do estabelecimento relacionado.");
                     dado.setDataInicio(LocalDate.of(2026, 1, 1));
                     dado.setDataFim(LocalDate.of(2026, 12, 31));
                     dado.setAtivo(true);
@@ -301,7 +353,8 @@ imagem(pocoPreguica, FOTO_POCO_PREGUICA, TEXTO_ALTERNATIVO_POCO_PREGUICA, adicio
         }, adicionados);
     }
 
-    private void dadosDoUsuario(Usuario usuario, CategoriaAtrativo categoria, Atrativo atrativo, Map<String, Integer> adicionados) {
+    private void dadosDoUsuario(Usuario usuario, CategoriaAtrativo categoria, Atrativo atrativo,
+            Map<String, Integer> adicionados) {
         obterOuCriar(Preferencia.class, "e.usuario = :usuario and e.categoriaAtrativo = :categoria",
                 Map.of("usuario", usuario, "categoria", categoria), () -> {
                     var dado = new Preferencia();
@@ -324,7 +377,8 @@ imagem(pocoPreguica, FOTO_POCO_PREGUICA, TEXTO_ALTERNATIVO_POCO_PREGUICA, adicio
 
     private void novidade(Usuario autor, String titulo, String resumo, Map<String, Integer> adicionados) {
         if (autor.getPerfil() != PerfilUsuario.ADMIN || !Boolean.TRUE.equals(autor.getAtivo())) {
-            log.warn("Novidade não adicionada: o e-mail de demonstração já pertence a usuário sem perfil de administrador ativo.");
+            log.warn(
+                    "Novidade não adicionada: o e-mail de demonstração já pertence a usuário sem perfil de administrador ativo.");
             return;
         }
         obterOuCriar(Novidade.class, "lower(e.titulo) = lower(:titulo)", Map.of("titulo", titulo), () -> {
@@ -332,7 +386,8 @@ imagem(pocoPreguica, FOTO_POCO_PREGUICA, TEXTO_ALTERNATIVO_POCO_PREGUICA, adicio
             dado.setAutor(autor);
             dado.setTitulo(titulo);
             dado.setResumo(resumo);
-            dado.setConteudo("Conteúdo editorial de DEMONSTRAÇÃO. " + resumo + " Fontes em docs/fontes-dados-iniciais.md.");
+            dado.setConteudo(
+                    "Conteúdo editorial de DEMONSTRAÇÃO. " + resumo + " Fontes em docs/fontes-dados-iniciais.md.");
             dado.setSituacao(SituacaoNovidade.RASCUNHO);
             return dado;
         }, adicionados);
