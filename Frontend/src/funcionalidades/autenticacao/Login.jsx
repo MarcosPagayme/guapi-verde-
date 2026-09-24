@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, LoaderCircle } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { mensagemErroAuth } from '../../servicos/authService'
+import { obterRotaPerfil } from '../../servicos/rotaPerfil'
 import logoGuapiVerde from '../../assets/Logo_GUAPIVERDE.png'
 
 function Login() {
@@ -36,7 +37,7 @@ function Login() {
     try {
       const usuario = await login({ email, senha })
       if (!montado.current) return
-      navigate(usuario.perfil === 'ADMIN' ? '/admin' : '/perfil', { replace: true })
+      navigate(obterRotaPerfil(usuario), { replace: true })
     } catch (falha) {
       if (montado.current) setErro(mensagemErroAuth(falha))
     } finally {

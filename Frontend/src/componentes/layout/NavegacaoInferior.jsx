@@ -1,5 +1,7 @@
 import { CalendarDays, Compass, Gift, Home, UserRound } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
+import { useAuth } from '../../hooks/useAuth'
+import { obterRotaPerfil } from '../../servicos/rotaPerfil'
 
 const itens = [
   { nome: 'Início', caminho: '/', Icone: Home },
@@ -10,13 +12,18 @@ const itens = [
 ]
 
 function NavegacaoInferior() {
+  const { usuario } = useAuth()
+  const itensNavegacao = itens.map((item) => item.nome === 'Perfil'
+    ? { ...item, caminho: obterRotaPerfil(usuario) }
+    : item)
+
   return (
     <nav
       className="area-segura-inferior fixed inset-x-0 bottom-0 z-40 border-t border-black/10 bg-white/95 px-2 pt-2 shadow-[0_-8px_24px_rgba(23,77,54,0.08)] backdrop-blur"
       aria-label="Navegação principal"
     >
       <div className="mx-auto grid max-w-xl grid-cols-5">
-        {itens.map(({ nome, caminho, Icone }) => (
+        {itensNavegacao.map(({ nome, caminho, Icone }) => (
           <NavLink
             key={caminho}
             to={caminho}
